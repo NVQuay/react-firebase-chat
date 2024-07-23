@@ -20,7 +20,7 @@ const App = () => {
     };
   }, [fetchUserInfo]);
 
-  console.log(currentUser);
+  // console.log(currentUser);
 
   if (isLoading) return <div className="loading">Loading....</div>;
 
