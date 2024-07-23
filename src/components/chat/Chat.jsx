@@ -3,11 +3,14 @@ import "./chat.css";
 import EmojiPicker from "emoji-picker-react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../lib/firebase";
+import { useChatStore } from "../../lib/chatStore";
 
 const Chat = () => {
   const [chat, setChat] = useState(false);
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
+
+  const { chatId } = useChatStore();
 
   const endRef = useRef(null);
 
@@ -16,12 +19,9 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    const unSub = onSnapshot(
-      doc(db, "chats", "8wb3p7AMmTlfw35WZXhz"),
-      (res) => {
-        setChat(res.data());
-      }
-    );
+    const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
+      setChat(res.data());
+    });
     return () => {
       unSub();
     };
@@ -51,79 +51,15 @@ const Chat = () => {
       </div>
       {/* CenTer */}
       <div className="center">
-        <div className="message">
-          <img src="./avatar.png" alt="" />
-          <div className="texts">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste,
-              tempore. Doloribus voluptas repellendus voluptate delectus
-              corrupti quasi magni ducimus dolores, voluptatibus quos architecto
-              eum ullam minima beatae optio id dolore.
-            </p>
-            <span>1 min ago</span>
+        {chat?.messages?.map((message) => (
+          <div className="message own" key={message}>
+            <div className="texts">
+              {message.img && <img src={message.img} alt="" />}
+              <p>{message.text}</p>
+              {/* <span>{message}</span> */}
+            </div>
           </div>
-        </div>
-        <div className="message own">
-          <div className="texts">
-            <img
-              src="https://scontent.fsgn5-15.fna.fbcdn.net/v/t39.30808-6/321944770_719091816456125_5966487919043686580_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHo-YJ8yieqwj0VWFZbbq5HSyGHJVg62FNLIYclWDrYUzkHXhzlW4Ae2M3ROoQ_kKpVucuyzkILgKgkFKySYUGt&_nc_ohc=soTMHRTKY0gQ7kNvgEff_Nm&_nc_ht=scontent.fsgn5-15.fna&oh=00_AYAb0IGL7lNueT4hErmrVo554V8jve23uPbGW_xHWo-kGw&oe=669C0032"
-              alt=""
-            />
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste,
-              tempore. Doloribus voluptas repellendus voluptate delectus
-              corrupti quasi magni ducimus dolores, voluptatibus quos architecto
-              eum ullam minima beatae optio id dolore.
-            </p>
-            <span>1 min ago</span>
-          </div>
-        </div>
-        <div className="message">
-          <img src="./avatar.png" alt="" />
-          <div className="texts">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste,
-              tempore. Doloribus voluptas repellendus voluptate delectus
-              corrupti quasi magni ducimus dolores, voluptatibus quos architecto
-              eum ullam minima beatae optio id dolore.
-            </p>
-            <span>1 min ago</span>
-          </div>
-        </div>
-        <div className="message own">
-          <div className="texts">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste,
-              tempore. Doloribus voluptas repellendus voluptate delectus
-              corrupti quasi magni ducimus dolores, voluptatibus quos architecto
-              eum ullam minima beatae optio id dolore.
-            </p>
-            <span>1 min ago</span>
-          </div>
-        </div>
-        <div className="message">
-          <img src="./avatar.png" alt="" />
-          <div className="texts">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste,
-              tempore. Doloribus voluptas repellendus voluptate delectus
-              corrupti quasi magni ducimus dolores, voluptatibus quos architecto
-              eum ullam minima beatae optio id dolore.
-            </p>
-            <span>1 min ago</span>
-          </div>
-        </div>
-        <div className="message own">
-          <div className="texts">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste,
-              tempore. Doloribus voluptas repellendus voluptate delectus
-              corrupti quasi magni ducimus dolores, voluptatibus quos architecto
-              eum ullam minima beatae optio id dolore.
-            </p>
-            <span>1 min ago</span>
-          </div>
-        </div>
+        ))}
         <div ref={endRef}></div>
       </div>
       {/* Bottom */}
