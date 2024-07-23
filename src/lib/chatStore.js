@@ -14,6 +14,7 @@ export const useChatStore = create((set) => ({
     // Check if current user is Blocked
 
     if (user.blocked.includes(currentUser.id)) {
+      console.log("isCurrentUserBlocked :true");
       return set({
         chatId,
         user: null,
@@ -23,14 +24,17 @@ export const useChatStore = create((set) => ({
     }
     // Check if Receiver is Blocked
     else if (currentUser.blocked.includes(user.id)) {
+      console.log("isCurrentUserBlocked :false");
+
       return set({
         chatId,
         user: user,
         isCurrentUserBlocked: false,
         isReceiverBlocked: true,
       });
-    }
-    else{
+    } else {
+      console.log("isCurrentUserBlocked : all false");
+
       return set({
         chatId,
         user,
