@@ -14,7 +14,7 @@ const ChatList = () => {
     const unSub = onSnapshot(
       doc(db, "userchats", currentUser.id),
       async (res) => {
-        const items = doc.data().chats;
+        const items = res.data().chats;
         const promises = items.map(async (item) => {
           const userDocRef = doc(db, "users", item.receiverId);
           const userDocSnap = await getDoc(userDocRef);
@@ -50,15 +50,15 @@ const ChatList = () => {
           onClick={() => SetAddMode((prev) => !prev)}
         />
       </div>
-      {chats.map((chat) => {
+      {chats.map((chat) => (
         <div className="item" key={chat.chatId}>
-          <img src="./avatar.png" alt="" />
+          <img src={chat.user.avatar || "./avatar.png"} alt="" />
           <div className="texts">
-            <span>Jane Doe</span>
+            <span>{chat.user.username}</span>
             <p>{chat.lastMessage}</p>
           </div>
-        </div>;
-      })}
+        </div>
+      ))}
 
       {addMode && <AddUser />}
     </div>
